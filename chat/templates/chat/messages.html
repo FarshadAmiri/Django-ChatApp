@@ -25,7 +25,7 @@ function scrolltoend() {
 }
 
 $(function () {
-    setInterval(receive, 1000)
+    setInterval(receive, 200)
 })
 
 const text = '<div class="container">'
@@ -44,7 +44,7 @@ function receive(){
                 $('#board').append(field);
                 scrolltoend();
             }
-        }
+        };
     })
 }
 

@@ -37,9 +37,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'chat.apps.ChatConfig',
+    # 'chat.apps.ChatConfig',
+    'chat',
     'crispy_forms',
-    'registration.apps.RegistrationConfig',
+    # 'registration.apps.RegistrationConfig',
+    'registration',
     'rest_framework',
     'widget_tweaks',
 ]

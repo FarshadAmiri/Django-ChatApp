@@ -4,7 +4,13 @@ from django.views.decorators.csrf import csrf_exempt
 from django.http.response import JsonResponse
 from rest_framework.parsers import JSONParser
 from chat.serializers import MessageSerializer
+from .RAG import load_model, llm_inference
 
+model_obj = load_model()
+model = model_obj["model"]
+tokenizer = model_obj["tokenizer"]
+device = model_obj["device"]
+streamer = model_obj["streamer"]
 
 def getFriendsList(id):
     """
@@ -140,8 +146,21 @@ def message_list(request, sender=None, receiver=None):
 
     elif request.method == "POST":
         data = JSONParser().parse(request)
+        print(data)
         serializer = MessageSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
+            ans_data = {}
+            ans_data["sender_name"] = data["receiver_name"]
+            ans_data["receiver_name"] = data["sender_name"]
+            prompt = serializer["description"].value
+            answer = llm_inference(prompt, model, tokenizer, device, streamer=None, max_length=4000, )
+            ans_data["description"] = answer[len(prompt):]
+            ans_serializer = MessageSerializer(data=ans_data)
+            print(f"ans_serializer: {ans_serializer}")
+            if ans_serializer.is_valid():
+                print("ans_serializer.is_valid() = True")
+                ans_serializer.save()
             return JsonResponse(serializer.data, status=201)
+            # return JsonResponse(response_data, status=201)
         return JsonResponse(serializer.errors, status=400)
