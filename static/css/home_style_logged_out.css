@@ -1,5 +1,3 @@
-{% load static %}
-
 body {
     background-image: url("{% static 'images/TodoBG.png' %}");
     background-position: center;
